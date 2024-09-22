@@ -30,4 +30,8 @@ public class TemperatureConverter {
     public boolean isExtremeTemperature(double celsius) {
         return celsius < -40 || celsius > 50;
     }
+
+    public static float kelvinToCel(float kel){
+        return (float) (kel - 273.15);
+    }
 }
