@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from Git repository
-                git 'https://github.com/ADirin/TempConverter.git'
+                git 'https://github.com/jonnekoi/testt.git'
             }
         }
         stage('Build Docker Image') {
