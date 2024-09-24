@@ -1,6 +1,6 @@
 
 # Use an official Maven image as a parent image
-FROM maven:latest
+FROM maven:3.8.1-openjdk-17-slim
 
 # Set metadata information
 LABEL authors="jonnekoivisto"
