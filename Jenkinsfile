@@ -15,14 +15,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from Git repository
-                git branch: 'main', url: 'https://github.com/jonnekoi/testt'
+                git 'https://github.com/ADirin/TempConverter.git'
             }
         }
         stage('Build Docker Image') {
             steps {
                 // Build Docker image
                 script {
-                    def customImage = docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
+                    docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
                 }
             }
         }
@@ -31,17 +31,10 @@ pipeline {
                 // Push Docker image to Docker Hub
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
-                        def customImage = docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
-                        customImage.push()
+                        docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
                     }
                 }
             }
-        }
-    }
-    post {
-        always {
-            junit '**/target/surefire-reports/*.xml'
-            jacoco execPattern: '**/target/jacoco.exec'
         }
     }
 }
