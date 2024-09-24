@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        DOCKERHUB_CREDENTIALS_ID = 'jonnekoi'
         DOCKERHUB_REPO = 'jonnekoi/test'
         DOCKER_IMAGE_TAG = 'latest'
     }
@@ -24,7 +25,7 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'jonnekoi') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS_ID') {
                         docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
                     }
                 }
