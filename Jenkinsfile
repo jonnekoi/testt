@@ -1,11 +1,7 @@
 pipeline {
     agent any
     environment {
-        // Define Docker Hub credentials ID
-        DOCKERHUB_CREDENTIALS_ID = 'jonnekoi'
-        // Define Docker Hub repository name
         DOCKERHUB_REPO = 'jonnekoi/test'
-        // Define Docker image tag
         DOCKER_IMAGE_TAG = 'latest'
     }
     tools {
@@ -14,13 +10,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from Git repository
-                git 'https://github.com/jonnekoi/testt.git'
+                // Checkout the code from the repository configured in Jenkins
+                checkout scm
             }
         }
         stage('Build Docker Image') {
             steps {
-                // Build Docker image
                 script {
                     docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
                 }
@@ -28,13 +23,24 @@ pipeline {
         }
         stage('Push Docker Image to Docker Hub') {
             steps {
-                // Push Docker image to Docker Hub
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
+                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS_ID') {
                         docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
                     }
                 }
             }
+        }
+    }
+    post {
+        always {
+            echo 'Cleaning up...'
+            // Optional: Perform any clean-up tasks like removing Docker images if needed
+        }
+        success {
+            echo 'Docker image successfully pushed!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
